@@ -173,14 +173,7 @@ const els = {
   distributionGrid:   document.querySelector("#distributionGrid"),
   toastContainer:     document.querySelector("#toastContainer"),
   confettiCanvas:     document.querySelector("#confettiCanvas"),
-  themeColorMeta:     document.querySelector("#themeColorMeta"),
-  rankContainer:      document.querySelector("#rankContainer"),
-  rankIcon:           document.querySelector("#rankIcon"),
-  rankName:           document.querySelector("#rankName"),
-  rankPercentile:     document.querySelector("#rankPercentile"),
-  rankProgressFill:   document.querySelector("#rankProgressFill"),
-  rankScoreLabel:     document.querySelector("#rankScoreLabel"),
-  rankNextLabel:      document.querySelector("#rankNextLabel")
+  themeColorMeta:     document.querySelector("#themeColorMeta")
 };
 
 /* ══════════════════════════════════════════
@@ -1058,77 +1051,6 @@ function recordResult(didWin) {
    DIALOGS
 ══════════════════════════════════════════ */
 
-function calculateRank(stats) {
-  if (!stats || !stats.played || stats.played === 0 || stats.wins === 0) {
-    return {
-      score: 0,
-      rankName: "Nessuno",
-      percentile: "--",
-      icon: "lock",
-      class: "rank-none",
-      scoreNeeded: 1,
-      progress: 0,
-      nextRankName: "Bronzo 🥉",
-      desc: "Gioca almeno una partita per sbloccare il tuo grado globale."
-    };
-  }
-
-  // Calculate average attempts of won games
-  let totalAttempts = 0;
-  for (let key in stats.distribution) {
-    totalAttempts += Number(key) * Number(stats.distribution[key]);
-  }
-  const avgAttempts = totalAttempts / stats.wins;
-  const winRate = stats.wins / stats.played;
-
-  // Base score: 100 * winRate * (7 - avgAttempts) / 6
-  let baseScore = winRate * (7 - avgAttempts) * 16.67;
-
-  // Streak bonus: +0.5 per day, cap at +5 (10 days streak)
-  const streakBonus = Math.min(10, stats.currentStreak) * 0.5;
-
-  const score = Math.round((baseScore + streakBonus) * 10) / 10;
-
-  // Tiers definition
-  const TIERS = [
-    { threshold: 85, name: "Leggenda 👑", percentile: "Top 1%", icon: "auto_awesome", class: "rank-legend", desc: "Divinità della crittografia. Nessun segreto ti sfugge!" },
-    { threshold: 75, name: "Master 💎", percentile: "Top 5%", icon: "emoji_events", class: "rank-master", desc: "Enigmista Leggendario. Risoluzione fulminea e precisione assoluta!" },
-    { threshold: 65, name: "Diamante 🏆", percentile: "Top 15%", icon: "diamond", class: "rank-diamond", desc: "Mastro Crittografo d'élite. Risolutore supremo!" },
-    { threshold: 55, name: "Platino 🌟", percentile: "Top 30%", icon: "military_tech", class: "rank-platinum", desc: "Agente speciale di decifrazione. Mente da computer!" },
-    { threshold: 45, name: "Oro 🥇", percentile: "Top 50%", icon: "stars", class: "rank-gold", desc: "Analista esperto. Risolvi i messaggi con estrema naturalezza!" },
-    { threshold: 30, name: "Argento 🥈", percentile: "Top 75%", icon: "workspace_premium", class: "rank-silver", desc: "Crittografo in crescita. Ottimo senso logico!" },
-    { threshold: 0, name: "Bronzo 🥉", percentile: "Top 100%", icon: "workspace_premium", class: "rank-bronze", desc: "Decifratore alle prime armi. Gioca per salire di grado!" }
-  ];
-
-  let currentTierIndex = TIERS.findIndex(t => score >= t.threshold);
-  if (currentTierIndex === -1) currentTierIndex = TIERS.length - 1;
-  const currentTier = TIERS[currentTierIndex];
-
-  let nextTier = null;
-  let progress = 100;
-  let scoreNeeded = 0;
-  
-  if (currentTierIndex > 0) {
-    nextTier = TIERS[currentTierIndex - 1];
-    const range = nextTier.threshold - currentTier.threshold;
-    const progressScore = score - currentTier.threshold;
-    progress = Math.min(100, Math.max(0, Math.round((progressScore / range) * 100)));
-    scoreNeeded = Math.round((nextTier.threshold - score) * 10) / 10;
-  }
-
-  return {
-    score,
-    rankName: currentTier.name,
-    percentile: currentTier.percentile,
-    icon: currentTier.icon,
-    class: currentTier.class,
-    desc: currentTier.desc,
-    scoreNeeded,
-    progress,
-    nextRankName: nextTier ? nextTier.name : null
-  };
-}
-
 function showWelcomeIfNeeded() {
   const key = `${STORAGE_PREFIX}:welcomed`;
   if (!readJson(key)) {
@@ -1155,41 +1077,6 @@ function renderStatsDialog() {
   els.todayStat.textContent = state.result === "win" ? "✅" : state.result === "loss" ? "❌" : "⏳";
 
   renderDistribution(stats.distribution);
-
-  // Update Global Rank Card
-  if (els.rankContainer) {
-    const rankInfo = calculateRank(stats);
-    
-    // Reset all rank classes
-    els.rankContainer.className = "rank-container";
-    els.rankContainer.classList.add(rankInfo.class);
-
-    if (els.rankIcon) {
-      els.rankIcon.textContent = rankInfo.icon;
-    }
-    if (els.rankName) {
-      els.rankName.textContent = rankInfo.rankName;
-    }
-    if (els.rankPercentile) {
-      els.rankPercentile.textContent = rankInfo.percentile;
-      els.rankPercentile.title = rankInfo.desc;
-    }
-    if (els.rankScoreLabel) {
-      els.rankScoreLabel.textContent = rankInfo.score > 0 ? `Punti: ${rankInfo.score}` : "Punti: --";
-    }
-    if (els.rankProgressFill) {
-      els.rankProgressFill.style.width = `${rankInfo.progress}%`;
-    }
-    if (els.rankNextLabel) {
-      if (rankInfo.score === 0) {
-        els.rankNextLabel.textContent = "Gioca per sbloccare";
-      } else if (rankInfo.nextRankName) {
-        els.rankNextLabel.textContent = `Mancano ${rankInfo.scoreNeeded} pt a: ${rankInfo.nextRankName}`;
-      } else {
-        els.rankNextLabel.textContent = "Grado Massimo Raggiunto! 🎉";
-      }
-    }
-  }
 }
 
 function renderDistribution(distribution) {
@@ -1282,13 +1169,8 @@ function buildShareText({ includeUrl } = {}) {
   const score     = state.result === "win" ? `${state.attemptsUsed}/${MAX_ATTEMPTS}` : `X/${MAX_ATTEMPTS}`;
   const hintLabel = state.hintsUsed ? `, ${state.hintsUsed} indizi` : "";
 
-  // Get current rank info
-  const stats = getStats();
-  const rankInfo = calculateRank(stats);
-  const rankLine = rankInfo.score > 0 ? `\n🏆 Grado: ${rankInfo.rankName} (${rankInfo.percentile})` : "";
-
   const lines = [
-    `🔐 Messaggio Segreto #${puzzle.id} — ${score}${rankLine}`,
+    `🔐 Messaggio Segreto #${puzzle.id} — ${score}`,
     `${puzzle.category}${hintLabel}`,
     ...buildShareRows()
   ];
