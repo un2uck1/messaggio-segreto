@@ -412,15 +412,14 @@ h1 {
   transition: box-shadow 300ms ease;
 }
 
-/* All tiles in this word are locked — subtle success outline */
+/* All tiles in this word are locked — word complete */
 .word.word-complete {
-  box-shadow: 0 0 0 2px var(--correct-border), 0 0 12px rgba(83,141,78,0.18);
+  /* No outline or glow */
 }
 
 @keyframes word-unlock {
-  0%   { box-shadow: 0 0 0 0px var(--correct-border), 0 0 0px rgba(83,141,78,0); }
-  40%  { box-shadow: 0 0 0 3px var(--correct-border), 0 0 20px rgba(83,141,78,0.35); }
-  100% { box-shadow: 0 0 0 2px var(--correct-border), 0 0 12px rgba(83,141,78,0.18); }
+  0%   { transform: none; }
+  100% { transform: none; }
 }
 
 .word.word-complete-anim {
@@ -1226,6 +1225,11 @@ h3 {
   border-radius: 999px;
   background: var(--correct);
   transition: width 0.55s var(--ease-o);
+}
+
+.distribution-fill.zero {
+  min-width: 0;
+  width: 0% !important;
 }
 
 .distribution-row.current-row .distribution-fill {

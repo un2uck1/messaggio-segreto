@@ -39,12 +39,12 @@ const PUZZLES = [
   { category: "Proverbio", phrase: "NON TUTTO IL MALE VIEN PER NUOCERE" },
   { category: "Proverbio", phrase: "CHI DORME NON PIGLIA PESCI MA CHI VEGLIA LI MANGIA" },
   { category: "Proverbio", phrase: "TROPPI CUOCHI GUASTANO LA MINESTRA E IL BRODO" },
-  { category: "Proverbio", phrase: "CHI LA FA L ASPETTI E CHI LA RICEVE LA RITORNI" },
+  { category: "Proverbio", phrase: "CHI LA FA L'ASPETTI E CHI LA RICEVE LA RITORNI" },
   { category: "Proverbio", phrase: "MEGLIO UN UOVO OGGI CHE UNA GALLINA DOMANI" },
-  { category: "Proverbio", phrase: "L ERBA DEL VICINO E SEMPRE PIU VERDE" },
+  { category: "Proverbio", phrase: "L'ERBA DEL VICINO E SEMPRE PIU VERDE" },
   { category: "Proverbio", phrase: "CHI VA PIANO VA SANO E VA LONTANO" },
-  { category: "Proverbio", phrase: "L UNIONE FA LA FORZA E LA DIVISIONE LA FA CADERE" },
-  { category: "Proverbio", phrase: "IL MATTINO HA L ORO IN BOCCA PER CHI SI SVEGLIA" },
+  { category: "Proverbio", phrase: "L'UNIONE FA LA FORZA E LA DIVISIONE LA FA CADERE" },
+  { category: "Proverbio", phrase: "IL MATTINO HA L'ORO IN BOCCA PER CHI SI SVEGLIA" },
   { category: "Proverbio", phrase: "CHI SEMINA VENTO RACCOGLIE TEMPESTA" },
   // ── Cinema ──
   { category: "Cinema", phrase: "IL BUONO IL BRUTTO E IL CATTIVO DI SERGIO LEONE" },
@@ -61,7 +61,7 @@ const PUZZLES = [
   // ── Musica ──
   { category: "Musica", phrase: "NEL BLU DIPINTO DI BLU FELICE DI STARE LASSU" },
   { category: "Musica", phrase: "AZZURRO IL POMERIGGIO E TROPPO AZZURRO E LUNGO" },
-  { category: "Musica", phrase: "UNA CANZONE D AMORE PER NON PENSARE A TE" },
+  { category: "Musica", phrase: "UNA CANZONE D'AMORE PER NON PENSARE A TE" },
   { category: "Musica", phrase: "FIGLI DELLE STELLE NELLA NOTTE PIU BUIA" },
   { category: "Musica", phrase: "E DI NUOVO CAMBIA IL TEMPO E PURE LA STAGIONE" },
   { category: "Musica", phrase: "A COMPRENSIONE DI OGNI COSA SERVE PIU TEMPO" },
@@ -71,12 +71,12 @@ const PUZZLES = [
   { category: "Musica", phrase: "DIRE FARE BACIARE LETTERA O TESTAMENTO" },
   { category: "Musica", phrase: "QUESTO PICCOLO GRANDE AMORE DA SOGNO" },
   // ── Modi di dire ──
-  { category: "Modo di dire", phrase: "TRA IL DIRE E IL FARE C E DI MEZZO IL MARE" },
+  { category: "Modo di dire", phrase: "TRA IL DIRE E IL FARE C'E DI MEZZO IL MARE" },
   { category: "Modo di dire", phrase: "PRENDERE DUE PICCIONI CON UNA SOLA FAVA" },
   { category: "Modo di dire", phrase: "AVERE IL PROSCIUTTO SUGLI OCCHI PER NON VEDERE" },
   { category: "Modo di dire", phrase: "FARE ORECCHIE DA MERCANTE CON CHI PARLA TROPPO" },
   { category: "Modo di dire", phrase: "NON AVERE PELI SULLA LINGUA E DIRE LA VERITA" },
-  { category: "Modo di dire", phrase: "ESSERE COME IL DIAVOLO E L ACQUA SANTA" },
+  { category: "Modo di dire", phrase: "ESSERE COME IL DIAVOLO E L'ACQUA SANTA" },
   { category: "Modo di dire", phrase: "METTERE I BASTONI TRA LE RUOTE A TUTTI" },
   { category: "Modo di dire", phrase: "PIANGERE SUL LATTE VERSATO NON SERVE A NULLA" },
   { category: "Modo di dire", phrase: "SALVATO IN EXTREMIS DALLA CAMPANA DI VETRO" },
@@ -84,7 +84,7 @@ const PUZZLES = [
   { category: "Modo di dire", phrase: "METTERE IL CARRO DAVANTI AI BUOI DEL CAMPO" },
   // ── Sport ──
   { category: "Sport", phrase: "SQUADRA CHE VINCE NON SI CAMBIA MAI" },
-  { category: "Sport", phrase: "FINO AL FISCHIO FINALE DELL ARBITRO SI GIOCA" },
+  { category: "Sport", phrase: "FINO AL FISCHIO FINALE DELL'ARBITRO SI GIOCA" },
   { category: "Sport", phrase: "IL TALENTO SENZA ALLENAMENTO NON PORTA DA NESSUNA PARTE" },
   { category: "Sport", phrase: "LO SPORT E UNA SCUOLA DI VITA E DI RISPETTO" },
   { category: "Sport", phrase: "IL CALCIO E LA POESIA DEI POVERI DEL MONDO" },
@@ -92,7 +92,7 @@ const PUZZLES = [
   { category: "Sport", phrase: "OGNI ALLENAMENTO E UN PASSO VERSO LA VITTORIA" },
   { category: "Sport", phrase: "IL VERO CAMPIONE RIALZA LA TESTA DOPO LA CADUTA" },
   // ── Cibo e cucina ──
-  { category: "Cibo", phrase: "LA PIZZA METTE TUTTI D ACCORDO A TAVOLA" },
+  { category: "Cibo", phrase: "LA PIZZA METTE TUTTI D'ACCORDO A TAVOLA" },
   { category: "Cibo", phrase: "UN BUON PROFUMO PORTA TUTTI IN CUCINA DI SERA" },
   { category: "Cibo", phrase: "NON SI PUO FARE UNA FRITTATA SENZA ROMPERE LE UOVA" },
   { category: "Cibo", phrase: "LA PASTA DEVE CUOCERE AL DENTE CON IL SALE" },
@@ -121,10 +121,10 @@ const PUZZLES = [
   { category: "Vita", phrase: "LA PAZIENZA E LA VIRTU DEI FORTI E DEI SAGGI" },
   // ── Citazioni ──
   { category: "Citazione", phrase: "LA FANTASIA E PIU IMPORTANTE DELLA CONOSCENZA SCIENTIFICA" },
-  { category: "Citazione", phrase: "IL DUBBIO E L INIZIO DELLA SAGGEZZA UMANA" },
+  { category: "Citazione", phrase: "IL DUBBIO E L'INIZIO DELLA SAGGEZZA UMANA" },
   { category: "Citazione", phrase: "ESSERE O NON ESSERE QUESTO E IL DILEMMA" },
   { category: "Citazione", phrase: "PENSO DUNQUE SONO DICEVA IL FILOSOFO CARTESIO" },
-  { category: "Citazione", phrase: "L UNICA COSA CHE SO E DI NON SAPERE NULLA" },
+  { category: "Citazione", phrase: "L'UNICA COSA CHE SO E DI NON SAPERE NULLA" },
   { category: "Citazione", phrase: "AMORE CHE A NULLA AMATO AMAR PERDONA" },
   { category: "Citazione", phrase: "NEL MEZZO DEL CAMMIN DI NOSTRA VITA MI RITROVAI" },
   { category: "Citazione", phrase: "FATTI NON FOSTE A VIVER COME BRUTI MA PER SEGUIR VIRTUTE" },
@@ -1212,6 +1212,7 @@ function renderDistribution(distribution) {
     const fill = document.createElement("span");
     fill.className  = "distribution-fill";
     fill.style.width = "0%";
+    if (val === 0) fill.classList.add("zero");
     bar.append(fill);
 
     const count = document.createElement("span");
@@ -1220,9 +1221,12 @@ function renderDistribution(distribution) {
     row.append(label, bar, count);
     els.distributionGrid.append(row);
 
+    // Force layout reflow to ensure the transition animates from 0%
+    fill.offsetHeight;
+
     // animate fill
     requestAnimationFrame(() => {
-      fill.style.width = `${Math.max(10, (val / maxVal) * 100)}%`;
+      fill.style.width = val > 0 ? `${Math.max(10, (val / maxVal) * 100)}%` : "0%";
     });
   }
 }
@@ -1230,7 +1234,7 @@ function renderDistribution(distribution) {
 function renderResultDialog() {
   const won = state.result === "win";
   els.resultEmoji.textContent   = won ? "🎉" : "😔";
-  els.resultTitle.textContent   = won ? "Messaggio sbloccato!" : "Messaggio chiuso";
+  els.resultTitle.textContent   = won ? "Messaggio sbloccato!" : "Messaggio non sbloccato!";
 
   // Personalized win message
   if (won) {
