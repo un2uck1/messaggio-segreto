@@ -291,6 +291,23 @@ const dateKey    = formatDateKey(today);
 const puzzle     = getPuzzleForDate(today);
 const cipher     = buildCipher(puzzle.solution, `${dateKey}:${puzzle.phrase}`);
 const storageKey = `${STORAGE_PREFIX}:day:${dateKey}`;
+
+// Reset automatico dello stato di gioco giornaliero tramite query parameter (?reset)
+if (new URLSearchParams(window.location.search).has("reset")) {
+  try {
+    localStorage.removeItem(storageKey);
+    for (let i = localStorage.length - 1; i >= 0; i--) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith(`${STORAGE_PREFIX}:day:`)) {
+        localStorage.removeItem(k);
+      }
+    }
+  } catch (e) {}
+  const cleanUrl = new URL(window.location.href);
+  cleanUrl.searchParams.delete("reset");
+  window.location.replace(cleanUrl.pathname + cleanUrl.search);
+}
+
 let state        = loadState();
 let countdownInterval = null;
 let isAnimating  = false;
