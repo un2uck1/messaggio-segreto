@@ -156,6 +156,15 @@ const els = {
   helpDialog:         document.querySelector("#helpDialog"),
   statsDialog:        document.querySelector("#statsDialog"),
   resultDialog:       document.querySelector("#resultDialog"),
+  createDialog:       document.querySelector("#createDialog"),
+  createButton:       document.querySelector("#createButton"),
+  customPhraseInput:  document.querySelector("#customPhraseInput"),
+  customCategoryInput:document.querySelector("#customCategoryInput"),
+  generateLinkBtn:    document.querySelector("#generateLinkBtn"),
+  linkResultSection:  document.querySelector("#linkResultSection"),
+  customLinkOutput:   document.querySelector("#customLinkOutput"),
+  copyLinkBtn:        document.querySelector("#copyLinkBtn"),
+  customModeBanner:   document.querySelector("#customModeBanner"),
   resultTitle:        document.querySelector("#resultTitle"),
   resultMessage:      document.querySelector("#resultMessage"),
   resultSubtitle:     document.querySelector("#resultSubtitle"),
@@ -288,9 +297,37 @@ AudioEngine.init();
 
 const today      = new Date();
 const dateKey    = formatDateKey(today);
-const puzzle     = getPuzzleForDate(today);
-const cipher     = buildCipher(puzzle.solution, `${dateKey}:${puzzle.phrase}`);
-const storageKey = `${STORAGE_PREFIX}:day:${dateKey}`;
+
+// Parse query params for custom message mode
+const urlParams = new URLSearchParams(window.location.search);
+const customMessageBase64 = urlParams.get("m");
+const customCategoryBase64 = urlParams.get("c");
+
+let customPuzzle = null;
+if (customMessageBase64) {
+  try {
+    const phrase = decodeURIComponent(atob(customMessageBase64)).trim();
+    let category = "Segreto";
+    if (customCategoryBase64) {
+      category = decodeURIComponent(atob(customCategoryBase64)).trim();
+    }
+    if (phrase && phrase.length > 0) {
+      customPuzzle = {
+        category: category,
+        phrase: phrase.toUpperCase(),
+        id: "Speciale",
+        isCustom: true,
+        solution: normalizePhrase(phrase)
+      };
+    }
+  } catch (e) {
+    console.error("Errore decodifica messaggio personalizzato:", e);
+  }
+}
+
+const puzzle     = customPuzzle || getPuzzleForDate(today);
+const cipher     = buildCipher(puzzle.solution, puzzle.isCustom ? `custom:${puzzle.phrase}` : `${dateKey}:${puzzle.phrase}`);
+const storageKey = puzzle.isCustom ? `${STORAGE_PREFIX}:custom:${hashText(puzzle.phrase)}` : `${STORAGE_PREFIX}:day:${dateKey}`;
 
 // Reset automatico dello stato di gioco giornaliero tramite query parameter (?reset)
 if (new URLSearchParams(window.location.search).has("reset")) {
@@ -337,6 +374,59 @@ els.helpButton.addEventListener("click",  () => { if (isAnimating) return; Audio
 els.statsButton.addEventListener("click", () => { if (isAnimating) return; AudioEngine.playClick(); renderStatsDialog(); openDialog(els.statsDialog); });
 els.themeButton.addEventListener("click", () => { if (isAnimating) return; AudioEngine.playClick(); ThemeManager.toggle(); });
 els.muteButton.addEventListener("click",  () => { if (isAnimating) return; AudioEngine.toggleMute(); });
+
+els.createButton.addEventListener("click", () => {
+  if (isAnimating) return;
+  AudioEngine.playClick();
+  els.customPhraseInput.value = "";
+  els.customCategoryInput.value = "";
+  els.linkResultSection.setAttribute("hidden", "true");
+  openDialog(els.createDialog);
+});
+
+els.generateLinkBtn.addEventListener("click", () => {
+  AudioEngine.playClick();
+  const rawPhrase = els.customPhraseInput.value.trim();
+  const rawCategory = els.customCategoryInput.value.trim() || "Segreto";
+  
+  if (!rawPhrase) {
+    showToast("Inserisci prima una frase segreta!", "error");
+    return;
+  }
+  
+  const hasLetters = /[A-Za-z]/.test(rawPhrase);
+  if (!hasLetters) {
+    showToast("La frase deve contenere almeno delle lettere!", "error");
+    return;
+  }
+  
+  try {
+    const b64Msg = btoa(encodeURIComponent(rawPhrase.toUpperCase()));
+    const b64Cat = btoa(encodeURIComponent(rawCategory));
+    const shareUrl = `${window.location.origin}${window.location.pathname}?m=${b64Msg}&c=${b64Cat}`;
+    
+    els.customLinkOutput.value = shareUrl;
+    els.linkResultSection.removeAttribute("hidden");
+    showToast("Link generato con successo!", "info");
+  } catch (err) {
+    console.error(err);
+    showToast("Errore durante la generazione del link.", "error");
+  }
+});
+
+els.copyLinkBtn.addEventListener("click", () => {
+  AudioEngine.playClick();
+  const linkText = els.customLinkOutput.value;
+  if (!linkText) return;
+  
+  navigator.clipboard.writeText(linkText)
+    .then(() => {
+      showToast("Link copiato negli appunti! 🔗", "info");
+    })
+    .catch(() => {
+      showToast("Impossibile copiare il link automaticamente.", "error");
+    });
+});
 
 /* Keyboard shortcuts */
 document.addEventListener("keydown", (e) => {
@@ -486,8 +576,15 @@ function render() {
   const hintsLeft    = Math.max(0, MAX_HINTS - state.hintsUsed);
   const lockedCount  = cipher.requiredSymbols.filter(s => state.locked[s]).length;
 
-  els.dateLabel.textContent         = formatReadableDate(today);
-  els.puzzleNumberLabel.textContent = `Messaggio #${puzzle.id}`;
+  if (puzzle.isCustom) {
+    els.dateLabel.textContent         = "Messaggio Personalizzato ✉️";
+    els.puzzleNumberLabel.textContent = "Messaggio Speciale";
+    if (els.customModeBanner) els.customModeBanner.removeAttribute("hidden");
+  } else {
+    els.dateLabel.textContent         = formatReadableDate(today);
+    els.puzzleNumberLabel.textContent = `Messaggio #${puzzle.id}`;
+    if (els.customModeBanner) els.customModeBanner.setAttribute("hidden", "true");
+  }
   els.categoryLabel.textContent     = puzzle.category;
   els.shareButton.hidden            = !state.result;
 
@@ -914,7 +1011,9 @@ function finishGame(result) {
   state.completedAt = new Date().toISOString();
   state.selectedSymbol = null;
   state.message = result === "win" ? "Messaggio sbloccato! 🎉" : "Tentativi esauriti.";
-  recordResult(result === "win");
+  if (!puzzle.isCustom) {
+    recordResult(result === "win");
+  }
   render();
   setTimeout(() => {
     renderResultDialog();
@@ -1168,9 +1267,10 @@ async function shareResult() {
 function buildShareText({ includeUrl } = {}) {
   const score     = state.result === "win" ? `${state.attemptsUsed}/${MAX_ATTEMPTS}` : `X/${MAX_ATTEMPTS}`;
   const hintLabel = state.hintsUsed ? `, ${state.hintsUsed} indizi` : "";
+  const idLabel   = puzzle.isCustom ? "Speciale" : `#${puzzle.id}`;
 
   const lines = [
-    `🔐 Messaggio Segreto #${puzzle.id} — ${score}`,
+    `🔐 Messaggio Segreto ${idLabel} — ${score}`,
     `${puzzle.category}${hintLabel}`,
     ...buildShareRows()
   ];

@@ -39,6 +39,9 @@
             <span class="material-symbols-rounded" aria-hidden="true">volume_up</span>
           </button>
           <div class="divider-v" aria-hidden="true"></div>
+          <button id="createButton" class="icon-button" type="button" aria-label="Crea enigma">
+            <span class="material-symbols-rounded" aria-hidden="true">edit_document</span>
+          </button>
           <button id="statsButton" class="icon-button" type="button" aria-label="Statistiche">
             <span class="material-symbols-rounded" aria-hidden="true">bar_chart</span>
           </button>
@@ -47,6 +50,12 @@
           </button>
         </nav>
       </header>
+
+      <!-- Banner for custom message mode -->
+      <div id="customModeBanner" class="custom-mode-banner" hidden>
+        <span>Stai giocando a un messaggio personalizzato speciale!</span>
+        <a href="./" class="banner-link">Torna al quotidiano</a>
+      </div>
 
       <!-- ── GAME HEADER ── -->
       <div class="game-header">
@@ -173,6 +182,48 @@
           <div class="legend-row"><span class="legend-tile tile-demo locked-demo">A</span><span>Lettera corretta e bloccata</span></div>
           <div class="legend-row"><span class="legend-tile tile-demo hinted-demo">B</span><span>Rivelata da un indizio</span></div>
           <div class="legend-row"><span class="legend-tile tile-demo wrong-demo">C</span><span>Lettera sbagliata</span></div>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- Create Custom Message -->
+    <dialog id="createDialog" class="modal">
+      <form method="dialog">
+        <header class="modal-header">
+          <h2>Crea Enigma</h2>
+          <button class="icon-button" value="close" aria-label="Chiudi">
+            <span class="material-symbols-rounded" aria-hidden="true">close</span>
+          </button>
+        </header>
+        
+        <p class="create-desc">
+          Scrivi una frase segreta e scegli una categoria. Creeremo un link cifrato speciale da condividere con i tuoi amici!
+        </p>
+
+        <div class="input-group">
+          <label for="customPhraseInput">Frase Segreta (max 100 caratteri)</label>
+          <input type="text" id="customPhraseInput" maxlength="100" placeholder="Esempio: TI VOGLIO BENE" required autocomplete="off">
+        </div>
+
+        <div class="input-group">
+          <label for="customCategoryInput">Categoria (max 20 caratteri)</label>
+          <input type="text" id="customCategoryInput" maxlength="20" placeholder="Esempio: Compleanno, Amore, Amicizia" autocomplete="off">
+        </div>
+
+        <button type="button" id="generateLinkBtn" class="primary-button full-width">
+          <span class="material-symbols-rounded" aria-hidden="true">link</span>
+          Genera Link Cifrato
+        </button>
+
+        <div id="linkResultSection" class="link-result-section" hidden>
+          <hr class="divider-h" style="margin: 16px 0; border: 0; border-top: 1px solid var(--line);">
+          <label for="customLinkOutput">Link da condividere:</label>
+          <div class="link-copy-row">
+            <input type="text" id="customLinkOutput" readonly>
+            <button type="button" id="copyLinkBtn" class="icon-button highlight-btn" aria-label="Copia link">
+              <span class="material-symbols-rounded" aria-hidden="true">content_copy</span>
+            </button>
+          </div>
         </div>
       </form>
     </dialog>
